@@ -1,4 +1,4 @@
-module rabbit-mq-go
+module gitlab.nixdev.co/golang-general/rabbit-mq-go
 
 go 1.13
 

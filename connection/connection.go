@@ -2,7 +2,7 @@ package connection
 
 import (
 	"github.com/streadway/amqp"
-	"rabbit-mq-go/config"
+	"gitlab.nixdev.co/golang-general/rabbit-mq-go/config"
 )
 
 type ConnectionInterface interface {

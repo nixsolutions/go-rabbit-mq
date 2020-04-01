@@ -3,9 +3,9 @@ package channel
 import (
 	"github.com/golang/mock/gomock"
 	"github.com/streadway/amqp"
-	mock_channel "rabbit-mq-go/channel/test"
-	"rabbit-mq-go/config"
-	mock_connection "rabbit-mq-go/connection/test"
+	mock_channel "gitlab.nixdev.co/golang-general/rabbit-mq-go/channel/test"
+	"gitlab.nixdev.co/golang-general/rabbit-mq-go/config"
+	mock_connection "gitlab.nixdev.co/golang-general/rabbit-mq-go/connection/test"
 	"testing"
 )
 

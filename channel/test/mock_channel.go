@@ -7,8 +7,8 @@ package mock_channel
 import (
 	gomock "github.com/golang/mock/gomock"
 	amqp "github.com/streadway/amqp"
-	config "rabbit-mq-go/config"
-	connection "rabbit-mq-go/connection"
+	config "gitlab.nixdev.co/golang-general/rabbit-mq-go/config"
+	connection "gitlab.nixdev.co/golang-general/rabbit-mq-go/connection"
 	reflect "reflect"
 )
 

@@ -2,7 +2,7 @@ package connection
 
 import (
 	"github.com/golang/mock/gomock"
-	mock_rabbit "rabbit-mq-go/connection/test"
+	mock_rabbit "gitlab.nixdev.co/golang-general/rabbit-mq-go/connection/test"
 	"testing"
 )
 

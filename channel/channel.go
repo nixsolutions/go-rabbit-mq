@@ -2,8 +2,8 @@ package channel
 
 import (
 	"github.com/streadway/amqp"
-	"rabbit-mq-go/config"
-	"rabbit-mq-go/connection"
+	"gitlab.nixdev.co/golang-general/rabbit-mq-go/config"
+	"gitlab.nixdev.co/golang-general/rabbit-mq-go/connection"
 )
 
 type ChannelInterface interface {
