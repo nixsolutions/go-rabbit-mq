@@ -80,3 +80,10 @@ Start consume:
         // handle messages ...
     }
 ```
+
+For close connection and channel:
+
+```
+    _ = ch.Close()
+    _ = connector.Close()
+```
