@@ -2,9 +2,9 @@ package channel
 
 import (
 	"github.com/golang/mock/gomock"
+	"github.com/nixsolutions/rabbit-mq-go/config"
+	"github.com/nixsolutions/rabbit-mq-go/connection"
 	"github.com/streadway/amqp"
-	"gitlab.nixdev.co/golang-general/rabbit-mq-go/config"
-	"gitlab.nixdev.co/golang-general/rabbit-mq-go/connection"
 	"testing"
 )
 

@@ -7,8 +7,8 @@ package channel
 import (
 	gomock "github.com/golang/mock/gomock"
 	amqp "github.com/streadway/amqp"
-	config "gitlab.nixdev.co/golang-general/rabbit-mq-go/config"
-	connection "gitlab.nixdev.co/golang-general/rabbit-mq-go/connection"
+	config "github.com/nixsolutions/rabbit-mq-go/config"
+	connection "github.com/nixsolutions/rabbit-mq-go/connection"
 	reflect "reflect"
 )
 

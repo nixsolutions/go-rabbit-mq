@@ -1,9 +1,9 @@
 package channel
 
 import (
+	"github.com/nixsolutions/rabbit-mq-go/config"
+	"github.com/nixsolutions/rabbit-mq-go/connection"
 	"github.com/streadway/amqp"
-	"gitlab.nixdev.co/golang-general/rabbit-mq-go/config"
-	"gitlab.nixdev.co/golang-general/rabbit-mq-go/connection"
 )
 
 type ChannelInterface interface {
@@ -33,8 +33,8 @@ type RChannelInterface interface {
 }
 
 type Channel struct {
-	channel      RChannelInterface
-	QueueName    string
+	channel   RChannelInterface
+	QueueName string
 }
 
 func (ch *Channel) GetChannel() RChannelInterface {
