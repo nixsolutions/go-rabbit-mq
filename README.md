@@ -1,17 +1,25 @@
 ## Overview
 
-Wrapper for RabbitMQ for easily using
+Wrapper for RabbitMQ for easily using.
+
+This module was created for remove code repeating from services which using RabbitMQ.
+
+This module has predefined configs and you can use them with minimum code in your source code.
+
+But this module has structures for custom configs and the methods for using them, so this module does`not limit you.
 
 ### How use
 
 Init credentials:
 ```
-    credentials := config.Credentials{
-        Username:    os.Getenv("RABBIT_USERNAME"),
-        Password:    os.Getenv("RABBIT_PASSWORD"),
-        Port:        os.Getenv("RABBIT_PORT"),
-        ClusterName: os.Getenv("RABBIT_CLUSTER_NAME"),
+    credentials := config.NewCredentials{
+        os.Getenv("RABBIT_USERNAME"),
+        os.Getenv("RABBIT_PASSWORD"),
+        os.Getenv("RABBIT_PORT"),
+        os.Getenv("RABBIT_CLUSTER_NAME"),
     }
+    // or
+    credentials := config.NewEnvCredentials()
 ```
 
 Create connection and channel:
@@ -19,7 +27,7 @@ Create connection and channel:
 ```
     con := connection.Connection{}
     ch := channel.Channel{}
-    err := connector.Connect(credentials)
+    err := con.ConnectByCredentials(credentials)
     if err != nil {
         // handle error
     }
@@ -29,49 +37,19 @@ Create connection and channel:
     }
 ```
 
-Init configs:
-
-```
-    exchangeConfig := config.ExchangeConfig{
-        Name:       "name",
-        Type:       "topic",
-        Durable:    true,
-        AutoDelete: false,
-        Internal:   false,
-        NoWait:     false,
-        Args:       nil,
-    }
-    queueConfig := config.QueueConfig{
-        Name:       "name",
-        Durable:    true,
-        AutoDelete: false,
-        Exclusive:  false,
-        NoWait:     false,
-        Args:       nil,
-    }
-```
-
 Configure channel:
 
 ```
     _ = ch.GetChannel().Qos(1, 0, false)
-    _ = ch.ExchangeDeclare(exchangeConfig)
-    _ = ch.QueueDeclare(queueConfig)
-    _ = ch.BindQueue(exchangeConfig.Name)
+    _ = ch.QueueDeclare("queueName")
+    _ = ch.ExchangeDeclare()
+    _ = ch.BindQueue()
 ```
 
 Start consume:
 
 ```
-    stream, err := ch.GetChannel().Consume(
-        ch.QueueName,
-        "consumer_index,
-        false,
-        false,
-        false,
-        false,
-        nil,
-    )
+    stream, err := ch.Consume()
     if err != nil {
         // handle error ...
     }
@@ -81,9 +59,47 @@ Start consume:
     }
 ```
 
+For publish message:
+```
+    data := amqp.Publishing{
+    	ContentType: "text/plain",
+    	Body:        []byte("message"),
+    }
+
+    err := ch.Publish(data)
+    // or with params
+    err := ch.PublishWithParams(
+        "exchange", 
+        "routingKey", 
+        false, // mandatory 
+        false, // immediate 
+        data)
+    if err != nil {
+        // handle error ...
+    }
+```
+
 For close connection and channel:
 
 ```
     _ = ch.Close()
-    _ = connector.Close()
+    _ = con.Close()
+```
+
+For create custom configs:
+
+```
+    qc := config.QueueConfig{...}
+    ec := config.ExchangeConfig{...}
+    bqc := config.BindQueueConfig{...}
+    cc := config.ConsumerConfig{...}
+
+```
+
+And use methods for using your configs:
+```
+    err := ch.QueueDeclareByConfig(qc)
+    err := ch.ExchangeDeclareByConfig(ec)
+    err := ch.BindQueueByConfig(bqc)
+    err := ch.ConsumeByConfig(cc)
 ```
