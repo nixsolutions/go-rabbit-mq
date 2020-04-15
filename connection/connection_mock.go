@@ -6,9 +6,9 @@ package connection
 
 import (
 	gomock "github.com/golang/mock/gomock"
+	config "github.com/nixsolutions/go-rabbit-mq/config"
 	amqp "github.com/streadway/amqp"
 	reflect "reflect"
-	config "gitlab.nixdev.co/golang-general/rabbit-mq-go/config"
 )
 
 // MockConnectionInterface is a mock of ConnectionInterface interface

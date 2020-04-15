@@ -1,4 +1,4 @@
-module gitlab.nixdev.co/golang-general/rabbit-mq-go
+module github.com/nixsolutions/go-rabbit-mq
 
 go 1.13
 

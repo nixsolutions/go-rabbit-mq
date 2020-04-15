@@ -2,9 +2,9 @@ package channel
 
 import (
 	"github.com/golang/mock/gomock"
+	"github.com/nixsolutions/go-rabbit-mq/config"
+	"github.com/nixsolutions/go-rabbit-mq/connection"
 	"github.com/streadway/amqp"
-	"gitlab.nixdev.co/golang-general/rabbit-mq-go/config"
-	"gitlab.nixdev.co/golang-general/rabbit-mq-go/connection"
 	"testing"
 )
 
@@ -13,8 +13,8 @@ func TestBindQueue(t *testing.T) {
 	defer ctrl.Finish()
 	m := NewMockRChannelInterface(ctrl)
 	ch := Channel{channel: m, QueueName: "Test"}
-	m.EXPECT().QueueBind("Test", "Test", "TestExchange", false, nil).Return(nil)
-	err := ch.BindQueue("TestExchange")
+	m.EXPECT().QueueBind("Test", "Test", "Test", false, nil).Return(nil)
+	err := ch.BindQueue()
 	if err != nil {
 		t.Error("Bind queue error: ", err)
 	}
@@ -33,7 +33,7 @@ func TestQueueDeclare(t *testing.T) {
 		NoWait:     false,
 		Args:       nil}
 	m.EXPECT().QueueDeclare(c.Name, c.Durable, c.AutoDelete, c.Exclusive, c.NoWait, c.Args).Return(amqp.Queue{Name: c.Name}, nil)
-	_ = ch.QueueDeclare(c)
+	_ = ch.QueueDeclare("Test")
 	if ch.QueueName != "Test" {
 		t.Error("Declared queue name incorrect, expected: Test, Actual: ", ch.QueueName)
 	}
@@ -53,7 +53,7 @@ func TestExchangeDeclare(t *testing.T) {
 		NoWait:     false,
 		Args:       nil}
 	m.EXPECT().ExchangeDeclare(c.Name, c.Type, c.Durable, c.AutoDelete, c.Internal, c.NoWait, c.Args).Return(nil)
-	err := ch.ExchangeDeclare(c)
+	err := ch.ExchangeDeclare()
 	if err != nil {
 		t.Error("Exchange declaring error: ", err)
 	}
@@ -66,7 +66,7 @@ func TestPublish(t *testing.T) {
 	ch := Channel{channel: m, QueueName: "Test"}
 	p := amqp.Publishing{}
 	m.EXPECT().Publish("Test", "Test", false, false, p).Return(nil)
-	err := ch.Publish("Test", p)
+	err := ch.Publish(p)
 	if err != nil {
 		t.Error("Publishing to queue error: ", err)
 	}
