@@ -103,3 +103,6 @@ And use methods for using your configs:
     err := ch.BindQueueByConfig(bqc)
     err := ch.ConsumeByConfig(cc)
 ```
+
+## License
+The project is developed by [NIX Solutions](http://nixsolutions.com) Go team and distributed under [MIT LICENSE](https://raw.github.com/nixsolutions/go-rabbit-mq/master/LICENSE)
