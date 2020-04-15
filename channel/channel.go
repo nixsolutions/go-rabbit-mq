@@ -1,8 +1,8 @@
 package channel
 
 import (
-	"github.com/nixsolutions/rabbit-mq-go/config"
-	"github.com/nixsolutions/rabbit-mq-go/connection"
+	"github.com/nixsolutions/go-rabbit-mq/config"
+	"github.com/nixsolutions/go-rabbit-mq/connection"
 	"github.com/streadway/amqp"
 )
 

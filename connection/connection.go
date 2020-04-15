@@ -1,7 +1,7 @@
 package connection
 
 import (
-	"github.com/nixsolutions/rabbit-mq-go/config"
+	"github.com/nixsolutions/go-rabbit-mq/config"
 	"github.com/streadway/amqp"
 )
 

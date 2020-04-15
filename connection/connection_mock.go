@@ -6,7 +6,7 @@ package connection
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	config "github.com/nixsolutions/rabbit-mq-go/config"
+	config "github.com/nixsolutions/go-rabbit-mq/config"
 	amqp "github.com/streadway/amqp"
 	reflect "reflect"
 )
