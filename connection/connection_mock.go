@@ -2,7 +2,7 @@
 // Source: sharing/rabbit/connection (interfaces: ConnectionInterface,RConnectionInterface)
 
 // Package mock_connection is a generated GoMock package.
-package mock_connection
+package connection
 
 import (
 	gomock "github.com/golang/mock/gomock"

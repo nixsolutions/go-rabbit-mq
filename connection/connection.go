@@ -6,8 +6,10 @@ import (
 )
 
 type ConnectionInterface interface {
-	Connect(config.Credentials) error
+	ConnectByCredentials(config.Credentials) error
+	ConnectByDialString(string) error
 	Close() error
+	GetConnector() RConnectionInterface
 }
 
 type RConnectionInterface interface {
@@ -19,25 +21,20 @@ type Connection struct {
 	connection RConnectionInterface
 }
 
-func (conn *Connection) Connect(credentials config.Credentials) error {
-	connector, err := amqp.Dial("amqp://" +
-		credentials.Username + ":" +
-		credentials.Password + "@" +
-		credentials.ClusterName + ":" +
-		credentials.Port + "/")
-
-	if err != nil {
-		return err
-	}
-	conn.connection = connector
-
-	return nil
+func (con *Connection) ConnectByCredentials(credentials config.Credentials) error {
+	return con.ConnectByDialString(credentials.GetAMQPDialString())
 }
 
-func (conn *Connection) Close() error {
-	return conn.connection.Close()
+func (con *Connection) ConnectByDialString(url string) error {
+	connection, err := amqp.Dial(url)
+	con.connection = connection
+	return err
 }
 
-func (conn *Connection) GetConnector() RConnectionInterface {
-	return  conn.connection
+func (con *Connection) Close() error {
+	return con.connection.Close()
+}
+
+func (con *Connection) GetConnector() RConnectionInterface {
+	return con.connection
 }

@@ -7,12 +7,19 @@ import (
 )
 
 type ChannelInterface interface {
+	GetChannel() RChannelInterface
 	Create(connection.RConnectionInterface) error
 	Close() error
-	QueueDeclare(config.QueueConfig) error
-	ExchangeDeclare(config.ExchangeConfig) error
-	BindQueue(string) error
-	Publish(string, amqp.Publishing) error
+	QueueDeclare(string) error
+	QueueDeclareByConfig(config.QueueConfig) error
+	ExchangeDeclare() error
+	ExchangeDeclareByConfig(config.ExchangeConfig) error
+	BindQueue() error
+	BindQueueByConfig(bqc config.BindQueueConfig) error
+	Publish(amqp.Publishing) error
+	PublishWithParams(exchange, routingKey string, mandatory, immediate bool, body amqp.Publishing) error
+	Consume() (<-chan amqp.Delivery, error)
+	ConsumeByConfig(cc config.ConsumerConfig) (<-chan amqp.Delivery, error)
 }
 
 type RChannelInterface interface {
@@ -26,8 +33,8 @@ type RChannelInterface interface {
 }
 
 type Channel struct {
-	channel   RChannelInterface
-	QueueName string
+	channel      RChannelInterface
+	QueueName    string
 }
 
 func (ch *Channel) GetChannel() RChannelInterface {
@@ -47,15 +54,9 @@ func (ch *Channel) Close() error {
 	return ch.channel.Close()
 }
 
-func (ch *Channel) QueueDeclare(queueConfig config.QueueConfig) error {
-	q, err := ch.channel.QueueDeclare(
-		queueConfig.Name,
-		queueConfig.Durable,
-		queueConfig.AutoDelete,
-		queueConfig.Exclusive,
-		queueConfig.NoWait,
-		queueConfig.Args,
-	)
+func (ch *Channel) QueueDeclare(name string) error {
+	qc := config.NewQueueConfig(name)
+	q, err := ch.channel.QueueDeclare(qc.GetConfig())
 	if err != nil {
 		return err
 	}
@@ -64,33 +65,59 @@ func (ch *Channel) QueueDeclare(queueConfig config.QueueConfig) error {
 	return nil
 }
 
-func (ch *Channel) ExchangeDeclare(config config.ExchangeConfig) error {
-	return ch.channel.ExchangeDeclare(
-		config.Name,
-		config.Type,
-		config.Durable,
-		config.AutoDelete,
-		config.Internal,
-		config.NoWait,
-		config.Args,
-	)
+func (ch *Channel) QueueDeclareByConfig(qc config.QueueConfig) error {
+	q, err := ch.channel.QueueDeclare(qc.GetConfig())
+	if err != nil {
+		return err
+	}
+	ch.QueueName = q.Name
+
+	return nil
 }
 
-func (ch *Channel) BindQueue(exchangeName string) error {
-	return ch.channel.QueueBind(
-		ch.QueueName, // queue name
-		ch.QueueName, // routing key
-		exchangeName, // exchange
-		false,
-		nil)
+func (ch *Channel) ExchangeDeclare() error {
+	ec := config.NewExchangeConfigByQueueName(ch.QueueName)
+	return ch.channel.ExchangeDeclare(ec.GetConfig())
 }
 
-func (ch *Channel) Publish(exchangeName string, body amqp.Publishing) error {
+func (ch *Channel) ExchangeDeclareByConfig(ec config.ExchangeConfig) error {
+	return ch.channel.ExchangeDeclare(ec.GetConfig())
+}
+
+func (ch *Channel) BindQueue() error {
+	bqc := config.NewBindQueueConfigByQueueName(ch.QueueName)
+	return ch.channel.QueueBind(bqc.GetConfig())
+}
+
+func (ch *Channel) BindQueueByConfig(bqc config.BindQueueConfig) error {
+	return ch.channel.QueueBind(bqc.GetConfig())
+}
+
+func (ch *Channel) Publish(body amqp.Publishing) error {
 	return ch.channel.Publish(
-		exchangeName,
+		ch.QueueName,
 		ch.QueueName,
 		false, // mandatory
 		false, // immediate
 		body,
 	)
+}
+
+func (ch *Channel) PublishWithParams(exchange, routingKey string, mandatory, immediate bool, body amqp.Publishing) error {
+	return ch.channel.Publish(
+		exchange,
+		routingKey,
+		mandatory,
+		immediate,
+		body,
+	)
+}
+
+func (ch *Channel) Consume() (<-chan amqp.Delivery, error) {
+	cc := config.NewConsumerConfigByQueueName(ch.QueueName)
+	return ch.channel.Consume(cc.GetConfig())
+}
+
+func (ch *Channel) ConsumeByConfig(cc config.ConsumerConfig) (<-chan amqp.Delivery, error) {
+	return ch.channel.Consume(cc.GetConfig())
 }

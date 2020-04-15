@@ -2,7 +2,7 @@
 // Source: sharing/rabbit/channel (interfaces: ChannelInterface,RChannelInterface)
 
 // Package mock_channel is a generated GoMock package.
-package mock_channel
+package channel
 
 import (
 	gomock "github.com/golang/mock/gomock"

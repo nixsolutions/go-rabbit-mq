@@ -3,16 +3,15 @@ package channel
 import (
 	"github.com/golang/mock/gomock"
 	"github.com/streadway/amqp"
-	mock_channel "gitlab.nixdev.co/golang-general/rabbit-mq-go/channel/test"
 	"gitlab.nixdev.co/golang-general/rabbit-mq-go/config"
-	mock_connection "gitlab.nixdev.co/golang-general/rabbit-mq-go/connection/test"
+	"gitlab.nixdev.co/golang-general/rabbit-mq-go/connection"
 	"testing"
 )
 
 func TestBindQueue(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	m := mock_channel.NewMockRChannelInterface(ctrl)
+	m := NewMockRChannelInterface(ctrl)
 	ch := Channel{channel: m, QueueName: "Test"}
 	m.EXPECT().QueueBind("Test", "Test", "TestExchange", false, nil).Return(nil)
 	err := ch.BindQueue("TestExchange")
@@ -24,7 +23,7 @@ func TestBindQueue(t *testing.T) {
 func TestQueueDeclare(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	m := mock_channel.NewMockRChannelInterface(ctrl)
+	m := NewMockRChannelInterface(ctrl)
 	ch := Channel{channel: m, QueueName: "Test"}
 	c := config.QueueConfig{
 		Name:       "Test",
@@ -43,7 +42,7 @@ func TestQueueDeclare(t *testing.T) {
 func TestExchangeDeclare(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	m := mock_channel.NewMockRChannelInterface(ctrl)
+	m := NewMockRChannelInterface(ctrl)
 	ch := Channel{channel: m, QueueName: "Test"}
 	c := config.ExchangeConfig{
 		Name:       "Test",
@@ -63,7 +62,7 @@ func TestExchangeDeclare(t *testing.T) {
 func TestPublish(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	m := mock_channel.NewMockRChannelInterface(ctrl)
+	m := NewMockRChannelInterface(ctrl)
 	ch := Channel{channel: m, QueueName: "Test"}
 	p := amqp.Publishing{}
 	m.EXPECT().Publish("Test", "Test", false, false, p).Return(nil)
@@ -77,7 +76,7 @@ func TestCreate(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	ch := Channel{channel: nil}
-	mc := mock_connection.NewMockRConnectionInterface(ctrl)
+	mc := connection.NewMockRConnectionInterface(ctrl)
 	mc.EXPECT().Channel().Return(&amqp.Channel{}, nil)
 	_ = ch.Create(mc)
 	if ch.channel == nil {
@@ -88,7 +87,7 @@ func TestCreate(t *testing.T) {
 func TestClose(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	m := mock_channel.NewMockRChannelInterface(ctrl)
+	m := NewMockRChannelInterface(ctrl)
 	ch := Channel{channel: m}
 	m.EXPECT().Close().Return(nil)
 	err := ch.Close()
@@ -100,7 +99,7 @@ func TestClose(t *testing.T) {
 func TestGetChannel(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	m := mock_channel.NewMockRChannelInterface(ctrl)
+	m := NewMockRChannelInterface(ctrl)
 	ch := Channel{channel: m}
 	if m != ch.GetChannel() {
 		t.Error("Get channel return incorrect channel")

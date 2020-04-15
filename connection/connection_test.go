@@ -2,14 +2,13 @@ package connection
 
 import (
 	"github.com/golang/mock/gomock"
-	mock_rabbit "gitlab.nixdev.co/golang-general/rabbit-mq-go/connection/test"
 	"testing"
 )
 
 func TestClose(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	m := mock_rabbit.NewMockRConnectionInterface(ctrl)
+	m := NewMockRConnectionInterface(ctrl)
 	m.EXPECT().Close().Return(nil)
 	c := Connection{connection: m}
 	err := c.Close()
@@ -21,7 +20,7 @@ func TestClose(t *testing.T) {
 func TestGetConnector(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	m := mock_rabbit.NewMockRConnectionInterface(ctrl)
+	m := NewMockRConnectionInterface(ctrl)
 	c := Connection{connection: m}
 	if c.GetConnector() != m {
 		t.Error("Get connector return incorrect connector")
