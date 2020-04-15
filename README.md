@@ -1,12 +1,12 @@
 ## Overview
 
-Wrapper for RabbitMQ for easily using.
+The wrapper provides convenient access to the RabbitMQ from applications written in Golang language.
 
-This module was created for remove code repeating from services which using RabbitMQ.
+This module allows you to get rid of code duplication from services using RabbitMQ.
 
-This module has predefined configs and you can use them with minimum code in your source code.
+It includes predefined configs, you can use them with minimum code in your source code.
 
-But this module has structures for custom configs and the methods for using them, so this module does`not limit you.
+Although this module has structures for custom configs and the methods for using them, so it doesn't limit you.
 
 ### How use
 
