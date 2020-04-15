@@ -8,7 +8,7 @@ It includes predefined configs, you can use them with minimum code in your sourc
 
 Although this module has structures for custom configs and the methods for using them, so it doesn't limit you.
 
-### How use
+### How to use
 
 Init credentials:
 ```
@@ -59,7 +59,7 @@ Start consume:
     }
 ```
 
-For publish message:
+Publish message:
 ```
     data := amqp.Publishing{
     	ContentType: "text/plain",
@@ -79,14 +79,14 @@ For publish message:
     }
 ```
 
-For close connection and channel:
+Close connection and channel:
 
 ```
     _ = ch.Close()
     _ = con.Close()
 ```
 
-For create custom configs:
+Create custom configs:
 
 ```
     qc := config.QueueConfig{...}
@@ -96,7 +96,7 @@ For create custom configs:
 
 ```
 
-And use methods for using your configs:
+Take methods below for using your configs:
 ```
     err := ch.QueueDeclareByConfig(qc)
     err := ch.ExchangeDeclareByConfig(ec)
